@@ -1,5 +1,5 @@
 #!/bin/bash
-basefolder=/home/bvermeulen/Python/seismic_unix/data/forge_2d/Correlated_Shot_Gathers
+basefolder=/home/bvermeulen/Python/seismic_unix/forge_2d/data/su_results
 fn=line1_coords
 ntraces=25730
 nrcv=310

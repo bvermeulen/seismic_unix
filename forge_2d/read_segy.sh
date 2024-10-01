@@ -1,10 +1,10 @@
 #!/bin/bash
 
-basefolder=/home/bvermeulen/Python/seismic_unix/data/forge_2d/Correlated_Shot_Gathers
+basefolder=/home/bvermeulen/Python/seismic_unix/forge_2d/data
 i=0
 echo "Basefolder: $basefolder"
 
-for segyfile in "$basefolder"/*.sgy;
+for segyfile in "$basefolder"/Correlated_Shot_Gathers/*.sgy;
 do
 
     echo "processing file: $i, $segyfile"
@@ -19,6 +19,6 @@ do
 
 done
 
-susort fldr < tmp1.su | segyclean > "$basefolder"/line1.su
+susort fldr < tmp1.su | segyclean > "$basefolder"/su_results/line1.su
 rm tmp*.su
 echo "read_segy completed"
