@@ -12,13 +12,13 @@ for distmax in 12.5 25 50 100 200 500
 do
 	echo Running crooked line binning for maximimum offline distance $distmax into $dcdp m bins
 	sucdpbin < $basefolder/line1_norm.su \
-		  xline=329280,332126,333124,337720,339931,341522 \
-		  yline=4265315,4264380,4264308,4263949,4263920,4264422 \
+		  xline=329280,332051,333097,337744,340022,341522 \
+		  yline=4265315,4264410,4264397,4263942,4263961,4264422 \
           verbose=2 dcdp=$dcdp distmax=$distmax 2>$basefolder/cdp.log |
 	suwind key=cdp min=1 > $basefolder/geomdata_cmps_$distmax.su
 
 	echo Creating chart data
-	suchart < $basefolder/geomdata_cmps_$distmax.su key1=offset key2=cdp > $basefolder/plotdata outpar=par
+	suchart < $basefolder/geomdata_cmps_$distmax.su key1=cdp key2=offset > $basefolder/plotdata outpar=par
 
 	echo Running Postscript graphing routine
 	psgraph < $basefolder/plotdata par=par linewidth=0 mark=0 marksize=1 labelsize=6 titlesize=12 \
@@ -35,5 +35,5 @@ $convert > $basefolder/crookedLine_binning.ps
 cd $basefolder
 rm plotdata
 rm plot*.ps
-rm geomdata_cmps_*.su
+geomdata_cmps_*.su
 gv crookedLine_binning.ps
