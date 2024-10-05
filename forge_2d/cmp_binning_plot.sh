@@ -8,7 +8,7 @@ basefolder=/home/bvermeulen/Python/seismic_unix/forge_2d/data/su_results
 dcdp=12.50
 
 # Loop through several offline distances and compare results.
-for distmax in 12.5 25 50 100 200 500
+for distmax in 200 # 12.5 25 50 100 200 500
 do
 	echo Running crooked line binning for maximimum offline distance $distmax into $dcdp m bins
 	sucdpbin < $basefolder/line1_norm.su \
