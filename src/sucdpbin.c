@@ -42,18 +42,21 @@ segy tr;
 int
 main(int argc, char **argv)
 {
-	float *xline=NULL;	/* array of key mute curve values	*/
-	float *yline=NULL;	/* ...		mute curve time values 	*/
-	float dcdp;	/* distance between bin centers */
-	float *xbin=NULL, *ybin=NULL;
-	float sl, ord, x2, a, b, c, d, delta, dx;
-	float xmp, ymp, dist, distmin, distmax;
-	int nxline, nyline, nbin;
+	double *xline = NULL; /* array of binline vertices in x	*/
+	double *yline = NULL; /* ...    binline vertices in x 	*/
+	double dcdp;	/* distance between bin centers */
+	double *xbin = NULL, *ybin = NULL;
+	int *cbin = NULL;
+	double *dbin = NULL; /* remove if not required */
+	double sl, ord, x2, a, b, c, d, delta, dx;
+	double xmp, ymp, dist, distmin;
+	double distmax;
+	int nxline, nyline, nbin, totalbincount;
 	int verbose;
 	int ipoint;
 	int cdpmin;
-	float scale;
-	float length;
+	double scale;
+	double length;
 	int maxbin, ibin,iseg ;
 
 	/* Initialize */
@@ -71,23 +74,23 @@ main(int argc, char **argv)
 		err("lengths of xline, yline must be the same");
 	}
 	/* allocate space */
-	xline = ealloc1float(nxline);
-	yline = ealloc1float(nyline);
-	getparfloat("xline", xline);
-	getparfloat("yline", yline);
+	xline = ealloc1double(nxline);
+	yline = ealloc1double(nyline);
+	getpardouble("xline", xline);
+	getpardouble("yline", yline);
 	for (ipoint = 1; ipoint < nxline; ++ipoint) {
 		if (xline[ipoint] <= xline[ipoint - 1]) {
 			err("xline values must increase monotonically");
 		}
 	}
 
-	if (!getparfloat("dcdp", &dcdp)) {
+	if (!getpardouble("dcdp", &dcdp)) {
 		err("must give dcdp");
 	}
 	if (!getparint("cdpmin", &cdpmin)) {
 		cdpmin = 1001;
 	}
-	if (!getparfloat("distmax", &distmax)) {
+	if (!getpardouble("distmax", &distmax)) {
 		distmax = dcdp;
 	}
 	if (!getparint("verbose", &verbose)) {
@@ -95,7 +98,7 @@ main(int argc, char **argv)
 	}
 	checkpars();
 
-	if (verbose) {
+	if (verbose > 1) {
 		warn ("%d points on the line", nxline);
 		ipoint=0 ;
 		do  {
@@ -110,13 +113,15 @@ main(int argc, char **argv)
 		length=length+sqrt(pow((xline[ipoint]-xline[ipoint-1]),2)+pow((yline[ipoint]-yline[ipoint-1]),2));
 	}
 	maxbin=length/dcdp+1;
-	xbin = ealloc1float(maxbin+1);
-	ybin = ealloc1float(maxbin+1);
+	xbin = ealloc1double(maxbin+1);
+	ybin = ealloc1double(maxbin+1);
+	cbin = ealloc1int(maxbin+1);
+	dbin = ealloc1double(maxbin+1);
 
 	ibin=0;
 	xbin[ibin] = xline[0];
 	ybin[ibin] = yline[0];
-	if (verbose)
+	if (verbose > 1)
 	{
 		warn("ibin=%d x=%f y=%f ", ibin, xbin[ibin], ybin[ibin]);
 	}
@@ -126,7 +131,7 @@ main(int argc, char **argv)
 	ord = (yline[0]*xline[1]-yline[1]*xline[0])/
 	 	  (xline[1]-xline[0]);
 
-	if (verbose) {
+	if (verbose > 1) {
 		warn("slope: %f, ord: %f", sl, ord);
 	}
 
@@ -134,7 +139,7 @@ main(int argc, char **argv)
 
 	/* loop over segments */
 	do {
-		if (verbose) {
+		if (verbose > 1) {
 			warn("iseg=%d",iseg);
 		}
 
@@ -144,7 +149,7 @@ main(int argc, char **argv)
 			xbin[ibin] = xbin[ibin-1] + dx;
 			ybin[ibin] = sl*xbin[ibin] + ord;
 
-			if (verbose) {
+			if (verbose > 1) {
 				warn("ibin=%d x=%f y=%f ",ibin, xbin[ibin], ybin[ibin]);
 			}
 
@@ -168,7 +173,7 @@ main(int argc, char **argv)
 		xbin[ibin - 1] = x2;
 		ybin[ibin - 1] = sl * xbin[ibin] + ord;
 
-		if (verbose) {
+		if (verbose > 1) {
 			warn("slope=%f dx=%f ord=%f delta=%f", sl, dx, ord, delta);
 			warn("ibin=%d x=%f y=%f", ibin, xbin[ibin], ybin[ibin]);
 		}
@@ -176,7 +181,7 @@ main(int argc, char **argv)
 	} while (xbin[ibin] <= xline[nxline-1]);
 	nbin=ibin;
 
-	if (verbose) {
+	if (verbose > 1) {
 		warn ("length of the line :%f ",length);
 		warn ("maximum number of bin:%d",maxbin);
 		warn ("actual number of bin:%d",nbin);
@@ -188,29 +193,49 @@ main(int argc, char **argv)
 	/* Loop over traces */
 	do {
 		if (tr.scalco < 0 )
-			scale=1./abs(tr.scalco);
+		scale=1./abs(tr.scalco);
 		else if (tr.scalco > 0)
-			scale=tr.scalco;
+		scale=tr.scalco;
 		else {
 			warn ("scalco = 0 ; 1 assumed") ;
 			scale=1;
 		}
-		xmp=(tr.gx+tr.sx)/2.*scale;
-		ymp=(tr.gy+tr.sy)/2.*scale;
+		xmp=(tr.gx+tr.sx) * 0.5 * scale;
+		ymp=(tr.gy+tr.sy) * 0.5 *scale;
 		tr.cdp=cdpmin;
 		distmin=sqrt(pow(xmp-xbin[0],2)+pow(ymp-ybin[0],2));
 
-		for (ibin=1 ; ibin < nbin ; ++ibin) {
+		for (ibin=0 ; ibin < nbin ; ++ibin) {
 			dist=sqrt(pow(xmp-xbin[ibin],2)+pow(ymp-ybin[ibin],2));
-		   	/* warn ("ibin= %d dist= %f distmin= %f xmp= %f ymp= %f scale=%f", ibin, dist,distmin,xmp,ymp,scale); */
 			if (dist < distmin) {
 				distmin=dist;
 				tr.cdp=ibin+cdpmin;
 			}
 		}
-		if (distmin > distmax) tr.cdp=0;
+
+		if (distmin > distmax)
+		tr.cdp=0;
+
+		else {
+			ibin = tr.cdp - cdpmin;
+			cbin[ibin]++;
+			if (verbose > 2) {
+				distmin = sqrt(pow(xmp - xbin[ibin], 2) + pow(ymp - ybin[ibin], 2));
+				warn("ep=%d cdp=%d distmin=%f", tr.ep, tr.cdp, distmin);
+			}
+		}
+
 		puttr(&tr);
 	} while (gettr(&tr));
+
+	totalbincount = 0;
+	if (verbose > 0) {
+		for (ibin=0; ibin < nbin ; ++ibin) {
+			totalbincount += cbin[ibin];
+			warn("cdp: %d (%6.0f, %6.0f), bincount: %d ", ibin + cdpmin, xbin[ibin], ybin[ibin], cbin[ibin]);
+		}
+		warn("Total bin count: %d", totalbincount);
+	}
 
 	return(CWP_Exit());
 }
