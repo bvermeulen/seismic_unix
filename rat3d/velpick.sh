@@ -9,14 +9,13 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 echo "Velocity Analysis"
-rm -f panel.* picks.* par.* tmp*
 
 #------------------------------------------------
 # Defining Variables etc...
 #------------------------------------------------
 
 basefolder=/home/bvermeulen/Python/seismic_unix/rat3d/data/output
-indata=$basefolder/line1cdp_fk_bp_decon.su
+indata=$basefolder/line1cdp_sorted.su
 outdata=$basefolder/vpick.data1
 
 if [ ! -f $indata ]
@@ -25,12 +24,12 @@ then    echo "file $indata does not exist!"
         exit
 fi
 
-nt=2501
-dt=0.001
+nt=625
+dt=0.004
 
 nv=10   # Number of Velocities
-dv=400  # Interval
-fv=500  # First Velocity
+dv=200  # Interval
+fv=1500 # First Velocity
 
 >$outdata   # Write an empty file
 >par.cmp    # Write an empty file
@@ -66,17 +65,18 @@ do
 #------------------------------------------------
 
     >tmp1			# Create empty file
-    j=1
+    j=0
     k=`expr $picknow + 10`
     l=`echo "$dv * $nv / 120" | bc -l`
 
 	suwind < $indata key=cdp min=$picknow \
 			max=$k > tmp0
 
-    while [ $j -le 10 ]
+    while [ $j -lt 10 ]
     do
 		vel=`echo "$fv + $dv * $j * $nv / 10" | bc -l`
 
+		echo "velocity: $vel"
 		sunmo < tmp0 vnmo=$vel |
 			sustack >> tmp1
 		sunull ntr=2 nt=$nt dt=$dt >> tmp1
@@ -145,22 +145,22 @@ do
 	# It will not generate an output file - so the next command will crash the script!!
 	#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-	unisam nout=$nt fxout=0.0 dxout=$dt par=par.uni.$i method=mono > tmp.unisam
+	# cat par.uni.$i
+	# unisam \
+	# 	nout=$nt fxout=0.0 dxout=$dt par=par.uni.$i method=linear > tmp.unisam
 
-	echo "Completed unisam command ..."
+	# echo "Completed unisam command ..."
 
-	cat tmp.unisam |
-		 xgraph n=$nt nplot=1 d1=$dt f1=0.0 \
-			label1="Time [s]" label2="Velocity [m/s]" \
-			title="---> Stacking Velocity Function CMP $picknow" \
-			-geometry 400x600+422+10 style=seismic \
-			grid1=solid grid2=solid linecolor=3 marksize=1 mark=0 \
-			titleColor=red axesColor=blue &
+	# cat tmp.unisam |
+	# 	 xgraph n=$nt nplot=1 d1=$dt f1=0.0 \
+	# 		label1="Time [s]" label2="Velocity [m/s]" \
+	# 		title="---> Stacking Velocity Function CMP $picknow" \
+	# 		-geometry 400x600+422+10 style=seismic \
+	# 		grid1=solid grid2=solid linecolor=3 marksize=1 mark=0 \
+	# 		titleColor=red axesColor=blue &
 
 	echo "Picks OK? (y/n) " >  /dev/tty
 	read response
-
-	rm tmp*
 
 	case $response in
 		n*)
@@ -190,5 +190,4 @@ do
 done
 
 rm -f panel.* picks.* par.* tmp*
-
 exit
