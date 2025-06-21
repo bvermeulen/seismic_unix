@@ -92,12 +92,17 @@ do
 	echo "  A NMO corrected gather will be plotted after picking"
 	echo " "
 
+	nv=150
+	dv=25
+	fv=1000
+	bclip=0.1
+
 	suvelan < panel.$picknow nv=$nv dv=$dv fv=$fv |
 		suximage xbox=10 ybox=10 wbox=400 hbox=600 \
 			units="semblance" f2=$fv d2=$dv \
 			label1="Time [s]" label2="Velocity [m/s]" \
 			title="Semblance Plot CMP $picknow" cmap=hsv2 \
-			legend=1 units=Semblance verbose=0  gridcolor=black bclip=0.9\
+			legend=1 units=Semblance verbose=0  gridcolor=black bclip=$bclip\
 			grid1=solid grid2=solid mpicks=picks.$picknow
 
 	sort < picks.$picknow -n | mkparfile string1="tnmo" string2="vnmo" > par.$i
@@ -119,10 +124,6 @@ do
 #------------------------------------------------
 # Velocity Profile...
 #------------------------------------------------
-
-	# SED info: http://www.grymoire.com/Unix/Sed.html
-	# replace tnmo with xin and vnmo with yin as input for UNISAM
-	cat par.$i | sed -e 's/tnmo/xin/' -e 's/vnmo/yin/' > par.uni.$i
 
 	unisam \
 		par=par.unisam.$i nout=$nt fxout=0.0 dxout=$dt  method=linear > tmp.unisam
