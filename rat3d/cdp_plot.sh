@@ -13,5 +13,5 @@ cat $basefolder/output/cmploc.bin $basefolder/output/srcloc.bin $basefolder/outp
     psgraph n=$ntraces,$nsrc,$nrcv linecolor=green,red,blue wbox=16 hbox=3.5 d1num=1000 d2num=1000 labelsize=9 \
     grid1=solid grid2=solid gridcolor=gray marksize=0.5,1,1 gridwidth=0 linewidth=0,0 \
     title="Source Receiver and CMPs locations" label1=Easting label2=Northing \
-    > $basefolder/output/SrcRcvCmp_loc_map.ps
-gv $basefolder/output/SrcRcvCmp_loc_map.ps
+    > $basefolder/output/sp_rp_locmap.ps
+gv $basefolder/output/sp_rp_locmap.ps

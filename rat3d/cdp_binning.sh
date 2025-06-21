@@ -17,11 +17,12 @@ do
           verbose=2 dcdp=$dcdp distmax=$distmax 2>$basefolder/cdp.log |
 	suwind key=cdp min=1001 > $basefolder/line1cdp.su
 	susort < $basefolder/line1cdp.su cdp offset > $basefolder/tmp.su
-	suchw < $basefolder/tmp.su key1=d2 a=10.0 b=0 > $basefolder/line1cdp_sorted.su
+	suchw < $basefolder/tmp.su key1=d2 a=10.0 b=0 |
+	sumute key=offset xmute=-1400,0,1400 tmute=0.6,0.05,0.6 > $basefolder/line1cdp_muted.su
 	rm $basefolder/tmp.su
 
 	echo Creating chart data
-	suchart < $basefolder/line1cdp_sorted.su key1=cdp key2=offset > $basefolder/plotdata outpar=$basefolder/par
+	suchart < $basefolder/line1cdp_muted.su key1=cdp key2=offset > $basefolder/plotdata outpar=$basefolder/par
 
 	echo Running Postscript graphing routine
 	psgraph < $basefolder/plotdata par=$basefolder/par linewidth=0 mark=0 marksize=1 labelsize=6 titlesize=12 \
