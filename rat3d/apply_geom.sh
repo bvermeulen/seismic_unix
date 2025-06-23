@@ -1,7 +1,7 @@
 basefolder=/home/bvermeulen/Python/seismic_unix/rat3d/data/output
 
-a2b < $basefolder/202505_geometry.txt n1=10 > $basefolder/myheaders.bin
-sushw < $basefolder/line1.su infile=$basefolder/myheaders.bin key=ep,sx,sy,selev,sstat,gx,gy,gelev,gstat,offset > $basefolder/tmp1.su
+a2b < $basefolder/202505_geometry.txt n1=10 > $basefolder/headers.bin
+sushw < $basefolder/line1.su infile=$basefolder/headers.bin key=ep,sx,sy,selev,sstat,gx,gy,gelev,gstat,offset > $basefolder/tmp1.su
 sushw < $basefolder/tmp1.su key=scalco,scalel,d2 a=1,1,5 > $basefolder/tmp2.su
 
 suwind tmax=1.6 < $basefolder/tmp2.su > $basefolder/tmp3.su

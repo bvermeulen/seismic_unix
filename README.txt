@@ -2,6 +2,7 @@ tutorial: https://github.com/hadi-tim/sdp-seismic-unix
 author: Hadi Timediouine
 Dataset: https://wiki.seg.org/wiki/2D_Vibroseis_Line_001#Download_Link
 installation: https://wiki.seismic-unix.org/sudoc:su_installation
+help: https://sepwww.stanford.edu/oldsep/cliner/files/suhelp/suhelp.html
 
 
 apply geometry:

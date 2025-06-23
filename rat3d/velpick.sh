@@ -94,8 +94,8 @@ do
 
 	nv=150
 	dv=25
-	fv=1000
-	bclip=0.1
+	fv=100
+	bclip=0.05
 
 	suvelan < panel.$picknow nv=$nv dv=$dv fv=$fv |
 		suximage xbox=10 ybox=10 wbox=400 hbox=600 \
