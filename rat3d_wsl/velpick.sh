@@ -2,6 +2,13 @@
 
 # set -x
 echo "Velocity Analysis"
+echo " "
+echo "  Place the cursor over the semblance plot or the"
+echo "  constant velocity stack and type 's' to pick velocities."
+echo "  For each suitable cursor position, press 's' to pick."
+echo "  Type 'q' in the semblance plot when all picks are made."
+echo "  A NMO corrected gather will be plotted after picking"
+echo " "
 
 #------------------------------------------------
 # Defining Variables etc...
@@ -85,12 +92,6 @@ do
 # Semblance Plot...
 #------------------------------------------------
 
-	echo "  Place the cursor over the semblance plot or the"
-	echo "  constant velocity stack and type 's' to pick velocities."
-	echo "  For each suitable cursor position, press 's' to pick."
-	echo "  Type 'q' in the semblance plot when all picks are made."
-	echo "  A NMO corrected gather will be plotted after picking"
-	echo " "
 
 	nv=150
 	dv=25
@@ -116,7 +117,7 @@ do
 	>tmp2	# Create empty file
 	echo "cdp=$picknow" >> tmp2
 	cat par.$i >> tmp2
-	foffset=$(sugethw < $basefolder/tmp.su key=offset | head -n 1 | grep -Eo '[-][0-9]*')
+	foffset=$(sugethw < panel.$picknow key=offset | head -n 1 | grep -Eo '[-][0-9]*')
 	sunmo <panel.$picknow par=tmp2 |
 	suximage title="CMP gather $picknow after NMO" xbox=10 ybox=10 \
 		wbox=400 hbox=600 verbose=0 f2=$foffset perc=90 &
@@ -133,8 +134,9 @@ do
 	 	n=$nt nplot=1 d1=$dt f1=0.0 \
 		label1="Time [s]" label2="Velocity [m/s]" \
 		title="---> Stacking Velocity Function CMP $picknow" \
-		-geometry 400x600+422+10 \
-		titleColor=red axesColor=blue \
+		-geometry 400x600+422+10 style=seismic\
+		titleColor=red axesColor=blue gridColor=purple\
+		grid1=dash grid2=dash \
 		linecolor=3 mark=0 marksize=1 &
 
 	echo "Completed Velocity profile ..."
