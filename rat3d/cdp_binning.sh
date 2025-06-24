@@ -30,7 +30,7 @@ do
            $distmax m - $dcdp m Bins"
 
 	convert="$convert $basefolder/plot$distmax.ps"
-    echo $convert
+    # echo $convert
 done
 
 # Now concatenate the Postscript files in the same order they were created, so the resulting multipage file
