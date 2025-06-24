@@ -7,7 +7,7 @@ echo "Velocity Analysis"
 # Defining Variables etc...
 #------------------------------------------------
 
-basefolder=/home/bvermeulen/seismic_unix/rat3d/data/output
+basefolder=/home/bvermeulen/seismic_unix/rat3d_wsl/data/output
 indata=$basefolder/line1cdp_muted.su
 outdata=$basefolder/vpick.data1
 
@@ -116,9 +116,10 @@ do
 	>tmp2	# Create empty file
 	echo "cdp=$picknow" >> tmp2
 	cat par.$i >> tmp2
+	foffset=$(sugethw < $basefolder/tmp.su key=offset | head -n 1 | grep -Eo '[-][0-9]*')
 	sunmo <panel.$picknow par=tmp2 |
 	suximage title="CMP gather $picknow after NMO" xbox=10 ybox=10 \
-		wbox=400 hbox=600 verbose=0 key=offset perc=90 &
+		wbox=400 hbox=600 verbose=0 f2=$foffset perc=90 &
 	echo "Completed NMO plot ..."
 
 #------------------------------------------------
@@ -128,13 +129,13 @@ do
 	unisam \
 		par=par.unisam.$i nout=$nt fxout=0.0 dxout=$dt  method=linear > tmp.unisam
 
-	cat tmp.unisam |
-		 xgraph n=$nt nplot=1 d1=$dt f1=0.0 \
-			label1="Time [s]" label2="Velocity [m/s]" \
-			title="---> Stacking Velocity Function CMP $picknow" \
-			-geometry 400x600+422+10 style=seismic \
-			titleColor=red axesColor=blue \
-			grid1=solid grid2=solid linecolor=3 mark=0 marksize=1 &
+	xgraph < tmp.unisam \
+	 	n=$nt nplot=1 d1=$dt f1=0.0 \
+		label1="Time [s]" label2="Velocity [m/s]" \
+		title="---> Stacking Velocity Function CMP $picknow" \
+		-geometry 400x600+422+10 \
+		titleColor=red axesColor=blue \
+		linecolor=3 mark=0 marksize=1 &
 
 	echo "Completed Velocity profile ..."
 

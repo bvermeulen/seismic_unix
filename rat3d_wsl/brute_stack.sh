@@ -1,6 +1,6 @@
 #!/bin/bash
 
-basefolder=/home/bvermeulen/seismic_unix/rat3d/data/output
+basefolder=/home/bvermeulen/seismic_unix/rat3d_wsl/data/output
 inputfile=line1cdp_muted.su
 outputfile=line1_stack.su
 
@@ -29,5 +29,5 @@ sugain \
 sustack |
 suwind key=cdp min=1135 max=1435 > $basefolder/$outputfile
 
-suximage < $basefolder/$outputfile verbose=0 f2=1135 d2=1.0 wbox=1400 hbox=700 title="Brute stack V0" cmap=grey clip=0.4
+suxwigb e< $basefolder/$outputfile verbose=0 f2=1135 d2=1.0 wbox=1400 hbox=700 title="Brute stack V0" cmap=grey clip=0.4
 # for collor add: cmap=hsv4

@@ -1,5 +1,5 @@
 #!/bin/bash
-basefolder=/home/bvermeulen/Python/seismic_unix/rat3d/data/output
+basefolder=/home/bvermeulen/seismic_unix/rat3d_wsl/data/output
 
 suwind key=ep min=$1 max=$1 tmax=2.5 < $basefolder/line1h.su > $basefolder/$1.su
 suchw < $basefolder/$1.su > $basefolder/$1.clean key1=d2 a=5.0

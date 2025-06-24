@@ -1,6 +1,6 @@
 #!/bin/bash
 
-basefolder=/mnt/d/OneDrive/Development/seismic_unix/rat3d
+basefolder=/home/bvermeulen/seismic_unix/rat3d_wsl
 i=0
 echo "Basefolder: $basefolder"
 

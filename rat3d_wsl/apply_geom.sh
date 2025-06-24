@@ -1,4 +1,4 @@
-basefolder=/home/bvermeulen/seismic_unix/rat3d/data/output
+basefolder=/home/bvermeulen/seismic_unix/rat3d_wsl/data/output
 
 a2b < $basefolder/202505_geometry.txt n1=10 > $basefolder/myheaders.bin
 sushw < $basefolder/line1.su infile=$basefolder/myheaders.bin key=ep,sx,sy,selev,sstat,gx,gy,gelev,gstat,offset > $basefolder/tmp1.su

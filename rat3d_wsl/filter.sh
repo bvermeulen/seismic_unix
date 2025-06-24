@@ -1,6 +1,6 @@
 #!/bin/bash
 
-basefolder=/home/bvermeulen/seismic_unix/rat3d/data/output
+basefolder=/home/bvermeulen/seismic_unix/rat3d_wsl/data/output
 inputfile=line1h.su
 outputfile=line1filtered.su
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-basefolder=/home/bvermeulen/seismic_unix/rat3d/data/output
+basefolder=/home/bvermeulen/seismic_unix/rat3d_wsl/data/output
 
 suwind key=cdp min=$1 max=$1 < $basefolder/line1cdp_muted.su > $basefolder/tmp.su
 foffset=$(sugethw < $basefolder/tmp.su key=offset | head -n 1 | grep -Eo '[-][0-9]*')
