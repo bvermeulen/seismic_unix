@@ -1,3 +1,5 @@
+#!/bin/bash
+
 basefolder=/home/bvermeulen/seismic_unix/rat3d_wsl/data/output
 
 a2b < $basefolder/202505_geometry.txt n1=10 > $basefolder/myheaders.bin

@@ -92,7 +92,6 @@ do
 # Semblance Plot...
 #------------------------------------------------
 
-
 	nv=150
 	dv=25
 	fv=1000
@@ -130,7 +129,7 @@ do
 	unisam \
 		par=par.unisam.$i nout=$nt fxout=0.0 dxout=$dt  method=linear > tmp.unisam
 
-	xgraph < tmp.unisam \
+	xgraphbv < tmp.unisam \
 	 	n=$nt nplot=1 d1=$dt f1=0.0 \
 		label1="Time [s]" label2="Velocity [m/s]" \
 		title="---> Stacking Velocity Function CMP $picknow" \
