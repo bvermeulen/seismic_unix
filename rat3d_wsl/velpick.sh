@@ -66,9 +66,9 @@ do
 
     >tmp1			# Create empty file
     j=0
-	s=`expr $picknow - 4`
-    k=`expr $picknow + 5`
-    l=`echo "$dv * $nv / 120" | bc`
+	s=`expr $picknow - 9`
+    k=`expr $picknow + 10`
+    l=`echo "$dv * $nv / 240" | bc`
 
 	suwind < $indata key=cdp min=$s \
 			max=$k > tmp0
