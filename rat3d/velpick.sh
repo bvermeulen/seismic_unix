@@ -14,7 +14,7 @@ echo " "
 # Defining Variables etc...
 #------------------------------------------------
 
-basefolder=/home/bvermeulen/Python/seismic_unix/rat3d/data/output
+basefolder=/home/bvermeulen/Development/seismic_unix/rat3d/data/output
 indata=$basefolder/line1cdp_muted.su
 outdata=$basefolder/vpick.data1
 
@@ -130,7 +130,7 @@ do
 	unisam \
 		par=par.unisam.$i nout=$nt fxout=0.0 dxout=$dt  method=linear > tmp.unisam
 
-	xgraph < tmp.unisam \
+	xgraphbv < tmp.unisam \
 	 	n=$nt nplot=1 d1=$dt f1=0.0 \
 		label1="Time [s]" label2="Velocity [m/s]" \
 		title="---> Stacking Velocity Function CMP $picknow" \

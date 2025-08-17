@@ -1,6 +1,6 @@
 #!/bin/bash
 
-basefolder=/home/bvermeulen/Python/seismic_unix/rat3d/data/output
+basefolder=/home/bvermeulen/Development/seismic_unix/rat3d/data/output
 inputfile=line1cdp_muted.su
 outputfile=line1_stack.su
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-basefolder=/home/bvermeulen/Python/seismic_unix/rat3d/data/output
+basefolder=/home/bvermeulen/Development/seismic_unix/rat3d/data/output
 
 # Set up a command to concatenate some plot files for comparing off-line distances accepted
 convert="cat "
@@ -18,7 +18,7 @@ do
 	suwind key=cdp min=1001 > $basefolder/line1cdp.su
 	susort < $basefolder/line1cdp.su cdp offset > $basefolder/tmp.su
 	suchw < $basefolder/tmp.su key1=d2 a=10.0 b=0 |
-	sumute key=offset xmute=-1400,0,1400 tmute=0.6,0.05,0.6 > $basefolder/line1cdp_muted.su
+	suwind key=offset  min=-1100 max=1100 > $basefolder/line1cdp_muted.su
 	rm $basefolder/tmp.su
 
 	echo Creating chart data

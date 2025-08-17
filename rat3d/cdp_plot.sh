@@ -1,6 +1,6 @@
 #!/bin/bash
 
-basefolder="/home/bvermeulen/Python/seismic_unix/rat3d/data"
+basefolder="/home/bvermeulen/Development/seismic_unix/rat3d/data"
 ntraces=78680
 nrcv=281
 nsrc=280

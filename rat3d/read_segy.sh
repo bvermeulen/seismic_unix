@@ -1,6 +1,6 @@
 #!/bin/bash
 
-basefolder=/home/bvermeulen/Python/seismic_unix/rat3d
+basefolder=/home/bvermeulen/Development/seismic_unix/rat3d
 i=0
 echo "Basefolder: $basefolder"
 

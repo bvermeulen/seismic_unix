@@ -1,5 +1,5 @@
 #!/bin/bash
-basefolder=/home/bvermeulen/Python/seismic_unix/rat3d/data/output
+basefolder=/home/bvermeulen/Development/seismic_unix/rat3d/data/output
 
 suwind < $basefolder/geomdata_cmps_7.su key=ep min=1255 max=1255 tmax=2.5 > $basefolder/tmp.su
 #suxwigb < $basefolder/tmp.su title="Ungained Data" &

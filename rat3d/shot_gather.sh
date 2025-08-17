@@ -1,5 +1,5 @@
 #!/bin/bash
-basefolder=/home/bvermeulen/Python/seismic_unix/rat3d/data/output
+basefolder=/home/bvermeulen/Development/seismic_unix/rat3d/data/output
 
 suwind key=ep min=$1 max=$1 < $basefolder/line1filtered.su > $basefolder/tmp.su
 foffset=$(sugethw < $basefolder/tmp.su key=offset | head -n 1 | grep -Eo '[-][0-9]*')
