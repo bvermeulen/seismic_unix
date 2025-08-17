@@ -1,0 +1,14 @@
+processing steps of the test line
+
+1.	Define and check  the  geometry of the line.
+2.	Calculate and apply the elevation statics (floation datum :100m ,replacement velocity : 2500 m/s
+3.	Surface wave attenuation 
+4.	Linear noise attenuation (apparent velocity of linear noise: 100-2500 m/s)
+5.	Wild amplitude attenuation.
+6.	Predict deconvolution  .  (operator length:200ms , time window1, 100-1500 ms , predictive distance :36ms.  time window 2 ,1500-3000ms, predictive distance :42ms).
+7.	Velocity analysis (every 20 cmps).
+8.	Calculate and apply the residual statics.
+9.	Velocity analysis (every 20 cmps).
+10.	Stack.
+11.	Random noise attenuation.
+12.	SegY output.

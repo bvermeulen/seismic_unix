@@ -14,8 +14,8 @@ echo " "
 # Defining Variables etc...
 #------------------------------------------------
 
-basefolder=/home/bvermeulen/seismic_unix/rat3d_wsl/data/output
-indata=$basefolder/line1cdp_muted.su
+basefolder=/home/bvermeulen/seismic_unix/2dtestline/data/output
+indata=$basefolder/line1filtered.su
 outdata=$basefolder/vpick.data1
 
 if [ ! -f $indata ]
@@ -24,7 +24,7 @@ then    echo "file $indata does not exist!"
         exit
 fi
 
-nt=400
+nt=750
 dt=0.004
 
 nv=10    # Number of Velocities
@@ -53,11 +53,13 @@ do
 # CMP Gather Plot...
 #------------------------------------------------
 
-    suwind <$indata key=cdp min=$picknow \
+    suwind <$indata key=ep min=$picknow \
             max=$picknow >panel.$picknow
+	foffset=$(sugethw < panel.$picknow key=offset | head -n 1 | grep -Eo '[-][0-9]*')
     suximage <panel.$picknow xbox=422 ybox=10 \
              wbox=400 hbox=600 \
-             title="CMP gather $picknow" \
+             title="Shot gather $picknow" \
+			 f2=$foffset \
              perc=90 verbose=0 &
 
 #------------------------------------------------
@@ -95,7 +97,7 @@ do
 	nv=150
 	dv=25
 	fv=1000
-	bclip=0.1
+	bclip=0.05
 
 	suvelan < panel.$picknow nv=$nv dv=$dv fv=$fv |
 		suximage xbox=10 ybox=10 wbox=400 hbox=600 \
