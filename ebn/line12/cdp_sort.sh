@@ -1,11 +1,11 @@
 #!/bin/bash
 
-basefolder=/home/bvermeulen/seismic_unix/2dtestline/data/output
-filename=line1filtered.su
-outfile=line1_cdp.su
+basefolder=/home/bvermeulen/seismic_unix/ebn/line12/data/output
+filename=line12_filter.su
+outfile=line12_cdp.su
 
 susort < $basefolder/$filename cdp offset > $basefolder/tmp.su
-suchw < $basefolder/tmp.su key1=d2 a=50.0 b=0 > $basefolder/$outfile
+sushw < $basefolder/tmp.su key=d2 a=10 > $basefolder/$outfile
 
 echo Creating chart data
 suchart < $basefolder/$outfile key1=cdp key2=offset > $basefolder/plotdata outpar=$basefolder/par
@@ -16,8 +16,8 @@ psgraph < $basefolder/plotdata par=$basefolder/par linewidth=0 mark=0 marksize=1
         $distmax m - $dcdp m Bins"
 
 cd $basefolder
+gv plot.ps
 rm plotdata
 rm par
 rm tmp.su
-gv plot.ps
 rm plot.ps

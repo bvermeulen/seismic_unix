@@ -1,14 +1,13 @@
 #!/bin/bash
-
-basefolder=/home/bvermeulen/seismic_unix/2dtestline/data/output
-inputfile=line1_cdp.su
-outputfile=line1_stack.su
-fcdp=1040
-lcdp=1360
+basefolder=/home/bvermeulen/seismic_unix/4dtest201/data/output
+inputfile=line201cdp_muted.su
+outputfile=line201_stack.su
+fcdp=1050
+lcdp=1350
 
 sunmo < $basefolder/$inputfile \
 	smute=1.40 \
-	cdp=1105,1160,1299 \
+	cdp=1100,1200,1300 \
 	tnmo=0.00,0.60,1.0,2.8 \
 	vnmo=1851.0,2250.0,3300.0,4325.0 \
 	tnmo=0.00,0.60,1.0,2.8 \
@@ -28,7 +27,7 @@ sugain \
 	agc=1 \
 	wagc=0.500 |
 sustack |
-suwind tmax=3 key=cdp min=$fcdp max=$lcdp > $basefolder/$outputfile
+suwind tmax=4 key=cdp min=$fcdp max=$lcdp > $basefolder/$outputfile
 
 suximage < $basefolder/$outputfile verbose=0 f2=$fcdp d2=1.0 wbox=1400 hbox=700 title="Brute stack V0" cmap=grey clip=0.3
 # for collor add: cmap=hsv4

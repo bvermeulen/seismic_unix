@@ -1,8 +1,8 @@
 #!/bin/bash
 
-basefolder=/home/bvermeulen/seismic_unix/2dtestline/data/output
-filename=line1filtered.su
-outfile=line1_cdp.su
+basefolder=/home/bvermeulen/seismic_unix/4dtest201/data/output
+filename=line201filter.su
+outfile=line201_cdp.su
 
 susort < $basefolder/$filename cdp offset > $basefolder/tmp.su
 suchw < $basefolder/tmp.su key1=d2 a=50.0 b=0 > $basefolder/$outfile
@@ -16,8 +16,8 @@ psgraph < $basefolder/plotdata par=$basefolder/par linewidth=0 mark=0 marksize=1
         $distmax m - $dcdp m Bins"
 
 cd $basefolder
+gv plot.ps
 rm plotdata
 rm par
 rm tmp.su
-gv plot.ps
 rm plot.ps
