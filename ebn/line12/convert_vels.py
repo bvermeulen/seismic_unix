@@ -46,7 +46,7 @@ def parse_line(line):
 velocity_picks = read_velocity_pick_generator(velocity_input_file)
 write_record = write_generator(velocity_output_file)
 write_record.send(None)
-cdp_factor = 1  # 5000 / 22000
+cdp_factor = 5000 / 23000
 
 vel_field = Velocity_field()
 cdp_new = 0

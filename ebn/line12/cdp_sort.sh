@@ -1,7 +1,7 @@
 #!/bin/bash
 tmpfolder=/home/bvermeulen/seismic_unix/ebn/line12/data/tmp
 basefolder=/home/bvermeulen/seismic_unix/ebn/line12/data/output
-filename=line12_filter_static.su
+filename=line12_filter.su
 outfile=line12_cdp.su
 distance=n/a
 dcdp=2.5
