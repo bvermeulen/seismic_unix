@@ -14,26 +14,25 @@ echo " "
 # Defining Variables etc...
 #------------------------------------------------
 
+tmpfolder=/home/bvermeulen/seismic_unix/ebn/line12/data/tmp
 basefolder=/home/bvermeulen/seismic_unix/ebn/line12/data/output
-indata=$basefolder/line12_cdp.su
+indata=$basefolder/line12_filter.su
 outdata=$basefolder/vpick.data1
 
 if [ ! -f $indata ]
-then    echo "file $indata does not exist!"
-        pause EXIT
-        exit
+then   
+    echo "file $indata does not exist!"
+    pause EXIT
+    exit
 fi
 
 nt=1000
 dt=0.004
-
 nv=10    # Number of Velocities
-dv=350   # Interval
-fv=1500  # First Velocity
-gain=1.5 # gain factor
-
+dv=400   # Interval
+fv=1000  # First Velocity
 >$outdata   # Write an empty file
->par.cmp    # Write an empty file
+>$tmpfolder/par.cmp # Write an empty file
 
 #------------------------------------------------
 # Interactive Velocity Analysis...
@@ -54,71 +53,142 @@ do
 # CMP Gather Plot...
 #------------------------------------------------
 
-    suwind <$indata key=fldr min=$picknow max=$picknow |
-    sugain tpow=$gain mark=0 > paneltmp.$picknow 
-    sushw key=cdp a=$picknow < paneltmp.$picknow > panel.$picknow
-    foffset=$(sugethw < panel.$picknow key=offset | head -n 1 | grep -Eo '[-][0-9]*')
-    suximage <panel.$picknow xbox=422 ybox=10 \
-        wbox=400 hbox=600 \
+    suwind \
+        < $indata \
+        key=fldr \
+        min=$picknow \
+        max=$picknow |
+    sushw \
+        key=cdp \
+        a=$picknow \
+        > $tmpfolder/panel.$picknow
+    foffset=$(sugethw < $tmpfolder/panel.$picknow key=offset | head -n 1 | grep -Eo '[-][0-9]*')
+    suximage \
+        <$tmpfolder/panel.$picknow \
+        xbox=422 \
+        ybox=10 \
+        wbox=400 \
+        hbox=600 \
         title="Shot gather $picknow" \
-	    f2=$foffset d2=5 \
-        perc=95 verbose=0 &
+	    f2=$foffset \
+        d2=5 \
+        perc=95 \
+        verbose=0 &
 
 #------------------------------------------------
 # Constant Velocity Stack (please wait)...
 #------------------------------------------------
 
-    >tmp1			# Create empty file
+    >$tmpfolder/tmp1			# Create empty file
     j=0
     l=`echo "$dv * $nv / 120" | bc`
 
     while [ $j -lt 10 ]
     do
-		vel=`echo "$fv + $dv * $j * $nv" | bc`
-		sunmo < panel.$picknow vnmo=$vel |
-		sustack repeat=1 nrepeat=10 >> tmp1
-		sunull ntr=2 nt=$nt dt=$dt >> tmp1
+		vel=`echo "$fv + $dv * $j" | bc`
+		sunmo \
+            < $tmpfolder/panel.$picknow \
+            vnmo=$vel |
+		sustack \
+            repeat=1 \
+            nrepeat=10 \
+            >> $tmpfolder/tmp1
+		sunull \
+            ntr=2 \
+            nt=$nt \
+            dt=$dt \
+            >> $tmpfolder/tmp1
 		j=`expr $j + 1`
     done
 
-	suximage <tmp1 xbox=834 ybox=10 wbox=400 hbox=600 \
-			title="Constant Velocity Stack CMP $picknow" \
-			label1="Time [s]" label2="Velocity [m/s]" \
-			f2=$fv d2=$l verbose=0 mpicks=picks.$picknow \
-			perc=90 n2tic=5 cmap=hsv5  &
+	suximage \
+        <$tmpfolder/tmp1 \
+        xbox=834 \
+        ybox=10 \
+        wbox=400 \
+        hbox=600 \
+        title="Constant Velocity Stack CMP $picknow" \
+        label1="Time [s]" label2="Velocity [m/s]" \
+        f2=$fv \
+        d2=$l \
+        verbose=0 \
+        mpicks=$tmpfolder/picks.$picknow \
+        perc=90 \
+        n2tic=5 \
+        cmap=hsv4 &
 
 #------------------------------------------------
 # Semblance Plot...
 #------------------------------------------------
 
 	nv=100
-	dv=35
-	fv=1500
-	bclip=0.05
+	dv=40
+	fv=1000
+	bclip=0.3
 
-	suvelan < panel.$picknow nv=$nv dv=$dv fv=$fv |
-	    suximage xbox=10 ybox=10 wbox=400 hbox=600 \
-		    units="semblance" f2=$fv d2=$dv \
-		    label1="Time [s]" label2="Velocity [m/s]" \
-		    title="Semblance Plot CMP $picknow" cmap=hsv2 \
-		    legend=1 units=Semblance verbose=0  gridcolor=black bclip=$bclip\
-		    grid1=solid grid2=solid mpicks=picks.$picknow
+	suvelan \
+        < $tmpfolder/panel.$picknow \
+        nv=$nv \
+        dv=$dv \
+        fv=$fv |
+	suximage \
+        xbox=10 \
+        ybox=10 \
+        wbox=400 \
+        hbox=600 \
+        units="semblance" \
+        f2=$fv \
+        d2=$dv \
+        label1="Time [s]" label2="Velocity [m/s]" \
+        title="Semblance Plot CMP $picknow" cmap=hsv2 \
+        legend=1 \
+        units=Semblance \
+        verbose=0  \
+        gridcolor=black \
+        bclip=$bclip\
+		grid1=solid \
+        grid2=solid \
+        mpicks=$tmpfolder/picks.$picknow
 
-    sort < picks.$picknow -n | mkparfile string1="tnmo" string2="vnmo" > par.$i
-    sort < picks.$picknow -n | mkparfile string1="xin" string2="yin" > par.unisam.$i
+    sort \
+        < $tmpfolder/picks.$picknow \
+        -n | 
+    mkparfile \
+        string1="tnmo" \
+        string2="vnmo" \
+        > $tmpfolder/par.$i
+    sort \
+        < $tmpfolder/picks.$picknow \
+        -n | 
+    mkparfile \
+        string1="xin" \
+        string2="yin" \
+        > $tmpfolder/par.unisam.$i
+
     echo "Completed listing of mkparfile output ..."
 
 #------------------------------------------------
 # NMO Plot and Velocity Profile...
 #------------------------------------------------
 
-    >tmp2	# Create empty file
-    echo "cdp=$picknow" >> tmp2
-    cat par.$i >> tmp2
-    foffset=$(sugethw < panel.$picknow key=offset | head -n 1 | grep -Eo '[-][0-9]*')
-    sunmo < panel.$picknow par=tmp2 |
-    suximage title="CMP gather $picknow after NMO" xbox=10 ybox=10 \
-	    wbox=400 hbox=600 verbose=0 f2=$foffset d2=5 perc=95 &
+    >$tmpfolder/tmp2	# Create empty file
+    echo "cdp=$picknow" >> $tmpfolder/tmp2
+    cat $tmpfolder/par.$i >> $tmpfolder/tmp2
+    foffset=$(sugethw < $tmpfolder/panel.$picknow key=offset | head -n 1 | grep -Eo '[-][0-9]*')
+    sunmo \
+        < $tmpfolder/panel.$picknow \
+        par=$tmpfolder/tmp2 |
+    suximage \
+        title="CMP gather $picknow after NMO" \
+        xbox=10 \
+        ybox=10 \
+	    wbox=400 \
+        hbox=600 \
+        f2=$foffset \
+        d2=5 \
+        perc=95 \
+        verbose=0 &
+
     echo "Completed NMO plot ..."
 
 #------------------------------------------------
@@ -126,16 +196,31 @@ do
 #------------------------------------------------
 
 	unisam \
-		par=par.unisam.$i nout=$nt fxout=0.0 dxout=$dt  method=linear > tmp.unisam
+		par=$tmpfolder/par.unisam.$i \
+        nout=$nt \
+        fxout=0.0 \
+        dxout=$dt \
+        method=linear \
+        > $tmpfolder/tmp.unisam
 
-	xgraph < tmp.unisam \
-	 	n=$nt nplot=1 d1=$dt f1=0.0 \
-		label1="Time [s]" label2="Velocity [m/s]" \
+	xgraph \
+        < $tmpfolder/tmp.unisam \
+	 	n=$nt \
+        nplot=1 \
+        d1=$dt \
+        f1=0.0 \
+        label1="Time [s]" \
+        label2="Velocity [m/s]" \
 		title="---> Stacking Velocity Function CMP $picknow" \
-		-geometry 400x600+422+10 style=seismic\
-		titleColor=red axesColor=blue gridColor=purple\
-		grid1=dash grid2=dash \
-		linecolor=3 mark=0 marksize=1 &
+		-geometry 400x600+422+10 style=seismic \
+		titleColor=red \
+        axesColor=blue \
+        gridColor=purple\
+		grid1=dash \
+        grid2=dash \
+		linecolor=3 \
+        mark=0 \
+        marksize=1 &
 
 	echo "Completed Velocity profile ..."
 
@@ -149,7 +234,7 @@ do
 			;;
 		*)
 			i=`expr $i + 1`
-			echo "$picknow  $i" >> par.cmp
+			echo "$picknow $i" >> $tmpfolder/par.cmp
 			;;
     esac
 done
@@ -159,14 +244,18 @@ echo "Completed picking ..."
 # Create Velocity Output File...
 #------------------------------------------------
 
-mkparfile < par.cmp string1=cdp string2=# > par.0
+mkparfile \
+    < $tmpfolder/par.cmp \
+    string1=cdp \
+    string2=# \
+    > $tmpfolder/par.0
 
 i=0
 while [ $i -le $nrpicks ]
 do
-	cat par.$i >>$outdata
+	cat $tmpfolder/par.$i >>$outdata
 	i=`expr $i + 1`
 done
 
-rm -f panel* picks* par* tmp*
+rm -f $tmpfolder/*
 exit

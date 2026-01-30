@@ -4,7 +4,6 @@ Dataset: https://wiki.seg.org/wiki/2D_Vibroseis_Line_001#Download_Link
 installation: https://wiki.seismic-unix.org/sudoc:su_installation
 help: https://sepwww.stanford.edu/oldsep/cliner/files/suhelp/suhelp.html
 
-
 apply geometry:
 sushw < line_001.su infile=myheaders.bin key=sx,sy,selev,sstat,gx,gy,gelev,gstat,offset > line_001e.su
 
