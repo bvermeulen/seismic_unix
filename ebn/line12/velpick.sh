@@ -250,8 +250,8 @@ do
 			echo "Picks removed"
 			;;
 		*)
-			i=`expr $i + 1`
 			echo "$picknow $i" >> $tmpfolder/par.cmp
+			i=`expr $i + 1`
 			;;
     esac
 done
@@ -270,7 +270,7 @@ mkparfile \
 i=0
 while [ $i -le $nrpicks ]
 do
-	cat $tmpfolder/par.$i >>$outdata
+	cat $tmpfolder/par.$i >> $outdata
 	i=`expr $i + 1`
 done
 
