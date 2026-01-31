@@ -31,6 +31,7 @@ dt=0.004
 nv=20    # Number of Velocities
 dv=200   # Interval
 fv=1000  # First Velocity
+trace_distance=30.0 # distance between traces within the the gather
 >$outdata   # Write an empty file
 >$tmpfolder/par.cmp    # Write an empty file
 
@@ -69,7 +70,7 @@ do
         hbox=600 \
         title="CMP gather $picknow" \
 	    f2=$foffset \
-        d2=120 \
+        d2=$trace_distance \
         perc=95 \
         verbose=0 &
 
@@ -179,8 +180,8 @@ do
 #------------------------------------------------
 
 	>$tmpfolder/tmp2	# Create empty file
-	echo "cdp=$picknow" >> tmp2
-	cat par.$i >> tmp2
+	echo "cdp=$picknow" >> $tmpfoldertmp2
+	cat $tmpfolder/par.$i >> $tmpfolder/tmp2
 	foffset=$( \
         sugethw \
             < $tmpfolder/panel.$picknow \
