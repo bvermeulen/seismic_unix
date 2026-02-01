@@ -19,7 +19,6 @@ inputfile = data_folder / "line12_geometry_2.txt"
 outputfile = data_folder / "cdp_values_10.csv"
 
 
-
 def parse(line):
     cdp_line = CdpLine()
     values = line.split()
@@ -34,7 +33,6 @@ def parse(line):
 
 cdp_line = CdpLine()
 cdp_dict = {}
-cdp_list = []
 with open(inputfile, mode="rt", encoding="latin-1") as fhandle:
     for line in fhandle:
         cdp_line = parse(line)
@@ -47,29 +45,13 @@ with open(inputfile, mode="rt", encoding="latin-1") as fhandle:
 
         else:
             cdp_dict[cdp].fold += 1
-            cdp_dict[cdp].easting += cdp_line.easting
-            cdp_dict[cdp].northing += cdp_line.northing 
-
-
-cdp_dict_out = {}
-for cdp,record_raw in cdp_dict.items():
-    record = CdpRecord()
-    record.fold = record_raw.fold
-    if record.fold > 0:
-        record.easting = record_raw.easting / record.fold
-        record.northing = record_raw.northing / record.fold
-
-    else:
-        record.easting = 0.0
-        record.northing = 0.0
-    cdp_dict_out[cdp] = record
+            cdp_dict[cdp].easting += (cdp_line.easting - cdp_dict[cdp].easting) / cdp_dict[cdp].fold
+            cdp_dict[cdp].northing += (cdp_line.northing - cdp_dict[cdp].northing) / cdp_dict[cdp].fold
 
 
 with open(outputfile, mode="wt") as fhandle:
     line = "cdp, fold, easting, northing\n"
     fhandle.write(line)
-    for cdp, record in cdp_dict_out.items():
+    for cdp, record in cdp_dict.items():
         line = f"{cdp}, {record.fold}, {record.easting:.1f}, {record.northing:.1f}\n"
         fhandle.write(line)
-
-
