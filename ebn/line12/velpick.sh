@@ -28,10 +28,7 @@ fi
 
 nt=1000
 dt=0.004
-nv=20    # Number of Velocities
-dv=200   # Interval
-fv=1000  # First Velocity
-trace_distance=30.0 # distance between traces within the the gather
+trace_distance=30 # distance between traces within the the gather
 >$outdata   # Write an empty file
 >$tmpfolder/par.cmp    # Write an empty file
 
@@ -77,12 +74,15 @@ do
 #------------------------------------------------
 # Constant Velocity Stack (please wait)...
 #------------------------------------------------
-
+    nv=20    # number of velocity panels
+    dv=200   # interval velocity
+    fv=1000  # first velocity
     >$tmpfolder/tmp1 # Create empty file
     j=0
     s=`expr $picknow - 19`
     k=`expr $picknow + 20`
-    l=`echo "$dv * $nv / 820" | bc`
+    l=`echo "$dv * $nv / 840" | bc`
+    echo "$dv, $nv, 840, $l. $s, $k"
 
     suwind \
         < $indata \
@@ -180,7 +180,7 @@ do
 #------------------------------------------------
 
 	>$tmpfolder/tmp2	# Create empty file
-	echo "cdp=$picknow" >> $tmpfoldertmp2
+	echo "cdp=$picknow" >> $tmpfolder/tmp2
 	cat $tmpfolder/par.$i >> $tmpfolder/tmp2
 	foffset=$( \
         sugethw \
@@ -203,7 +203,7 @@ do
         hbox=600 \
         verbose=0 \
         f2=$foffset \
-        d2=120 \
+        d2=$cdp_trace_interval \
         perc=95 &
 
 	echo "Completed NMO plot ..."

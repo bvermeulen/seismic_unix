@@ -3,6 +3,8 @@
 from pathlib import Path
 from dataclasses import dataclass
 
+reversed = False
+
 
 @dataclass
 class Velocity_field:
@@ -46,11 +48,11 @@ def parse_line(line):
 velocity_picks = read_velocity_pick_generator(velocity_input_file)
 write_record = write_generator(velocity_output_file)
 write_record.send(None)
-cdp_factor = 5794 / 23173
+cdp_factor = 5796 / 23173  # <-- 10m / 20m <-- 2903 / 23173
 
 vel_field = Velocity_field()
 cdp_new = 0
-line_out_cdp = "cdp="
+line_out_cdp = ""
 for line in velocity_picks:
     line = next(velocity_picks)
     if line[0:2] != "V2":
@@ -67,7 +69,7 @@ for line in velocity_picks:
             write_record.send(record2)
 
         else:
-            line_out_cdp = f"cdp={cdp}"
+            line_out_cdp = f"{cdp}"
 
         line_cdp = f"cdp: {cdp}, {vel_field.easting:.0f}, {vel_field.northing:.0f}"
         line_out_tnmo = f"tnmo={vel_field.time:.3f}"
@@ -83,7 +85,12 @@ for line in velocity_picks:
         )
 
 record1 = f"{line_cdp}\n{line_out_t_v_pair}\n"
-line_out_cdp = "\n".join([line_out_cdp])
+if not reversed:
+    line_out_cdp = "".join(["cdp=", line_out_cdp, " \\\n"])
+
+else:
+    line_out_cdp = "".join(["cdp=", ",".join(line_out_cdp.split(",")[::-1]), " \\\n"])
+
 print(record1)
 print(line_out_cdp)
 record2 = f"{line_out_tnmo} \\\n{line_out_vnmo} \\\n"

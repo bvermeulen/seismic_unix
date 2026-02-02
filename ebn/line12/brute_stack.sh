@@ -1,7 +1,7 @@
 #!/bin/bash
 basefolder=/home/bvermeulen/seismic_unix/ebn/line12/data/output
-inputfile=line12_cdp.su
-outputfile=line12_stack_filtered.su
+inputfile=line12_cdp_test.su
+outputfile=line12_stack_filtered_10_binned_test.su
 fcdp=0
 lcdp=27000
 
@@ -118,14 +118,36 @@ sunmo < $basefolder/$inputfile \
 	vnmo=0,1585,1587,1664,1765,1879,1930,2036,2229,3249,4004,4900 \
 	tnmo=0.000,0.032,0.254,0.447,0.723,0.947,1.098,1.266,1.492,3.221,9.959 \
 	vnmo=0,1582,1606,1669,1783,1872,1958,2417,2813,3931,4935 \
-    cdp=1150,1250,1350,1450,1550,1650,1750,1850,1950,2050,2150,2250,2350,2450,2550,2650,2750,2850,2950,3050,3150,3250,3350,3450,3550,3650,3750,3850,3950,4050,4150,4250,4350,4450,4550,4650,4750,4850,4950,5050,5150,5250,5350,5450,5550,5650,5750,5850,5950,6050,6150,6250,6350,6450,6550,6650 \
-	smute=1.2 |
-
+    cdp=1150,1250,1350,1450,1550,1650,1750,1850,1950,2050,2150,2250,2350,2450,2550,2650,2750,2850,2950,3050,3151,3251,3351,3451,3551,3651,3751,3851,3951,4051,4151,4251,4351,4451,4551,4651,4751,4851,4951,5051,5151,5252,5352,5452,5552,5652,5752,5852,5952,6052,6152,6252,6352,6452,6552,6652 \
+    smute=1.2 |
 sugain \
 	agc=1 \
-	wagc=0.500 |
+	wagc=1.000 |
 sustack |
-suwind tmax=4 key=cdp min=$fcdp max=$lcdp > $basefolder/$outputfile
+suwind \
+    tmax=4 \
+    key=cdp \
+    min=$fcdp \
+    max=$lcdp \
+    > $basefolder/$outputfile
 
-suximage < $basefolder/$outputfile verbose=0 f2=$fcdp d2=1.0 wbox=1400 hbox=700 title="Brute stack (bin size 25m)" cmap=grey clip=0.3
+if [ $1 == "reversed" ]; then
+    sortkey="-cdp"
+else
+    sortkey="cdp"
+fi
+echo "argument: $1, sortkey: $sortkey"
+susort \
+    < $basefolder/$outputfile \
+    $sortkey |
+suximage \
+    verbose=0 \
+    f2=$fcdp \
+    d2=1.0 \
+    wbox=1400 \
+    hbox=700 \
+    title="Brute stack" \
+    cmap=grey \
+    clip=0.5
+
 # for collor add: cmap=hsv4

@@ -4,7 +4,8 @@ basefolder=/home/bvermeulen/seismic_unix/ebn/line12/data/output
 filename=line12_filter.su
 outfile=line12_cdp.su
 distance=n/a
-dcdp=2.5
+dcdp=10.0
+cdp_trace_interval=30
 
 susort \
     < $basefolder/$filename \
@@ -14,7 +15,7 @@ susort \
 sushw \
     < $tmpfolder/tmp.su \
     key=d2 \
-    a=120 \
+    a=$cdp_trace_interval \
     > $basefolder/$outfile
 
 echo Creating chart data
