@@ -5,7 +5,7 @@ data_folder = Path("/home/bvermeulen/seismic_unix/ebn/line12/data")
 rps_fname = data_folder / "sps" / "L2EBN2020ASCAN012.rps"
 sps_fname = data_folder / "sps" / "L2EBN2020ASCAN012.sps"
 xps_fname = data_folder / "sps" / "L2EBN2020ASCAN012.xps"
-geometry_fname = data_folder / "output" / "line12_geometry_2.txt"
+geometry_fname = data_folder / "output" / "line12_geometry_10.txt"
 
 nsrc = 922  # total number of source points
 r_step = 1

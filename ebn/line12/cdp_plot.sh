@@ -4,7 +4,7 @@ ntraces=2428881
 nrcv=11599
 nsrc=922
 
-gawk '{print ($2+$7)/2,($3+$8)/2}'<$basefolder/line12_geometry.txt | head -n $ntraces | a2b > $basefolder/cmploc.bin
+gawk '{print ($2+$7)/2,($3+$8)/2}'<$basefolder/line12_geometry_10.txt | head -n $ntraces | a2b > $basefolder/cmploc.bin
 a2b < $basefolder/line12_coords_rcv.txt n1=2 > $basefolder/rcvloc.bin
 a2b < $basefolder/line12_coords_src.txt n1=2 > $basefolder/srcloc.bin
 
