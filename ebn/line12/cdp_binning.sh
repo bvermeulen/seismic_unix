@@ -2,7 +2,7 @@
 tmpfolder=/home/bvermeulen/seismic_unix/ebn/line12/data/tmp
 basefolder=/home/bvermeulen/seismic_unix/ebn/line12/data/output
 inputfilename=line12_filter.su
-outputfilename=line12_cdp_test.su
+outputfilename=line12_cdp.su
 cdp_trace_interval=30
 concats="cat " 
 
@@ -12,10 +12,10 @@ dcdp=10.0
 for distmax in 250
 do
     echo Running crooked line binning for maximimum offline distance $distmax into $dcdp m bins
-    sucdpbin_test \
+    sucdpbin \
         < $basefolder/$inputfilename \
         xline=214499,212234,211190,210209,209910,208454,205796,204974,204771,201168 \
-		yline=508889,499713,497614,493994,490019,484055,477973,474850,470510,452656 \
+	yline=508889,499713,497614,493994,490019,484055,477973,474850,470510,452656 \
         verbose=1 \
         dcdp=$dcdp \
         distmax=$distmax \

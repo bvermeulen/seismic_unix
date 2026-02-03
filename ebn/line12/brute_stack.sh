@@ -1,6 +1,6 @@
 #!/bin/bash
 basefolder=/home/bvermeulen/seismic_unix/ebn/line12/data/output
-inputfile=line12_cdp_test.su
+inputfile=line12_cdp.su
 outputfile=line12_stack_filtered_10_binned_test.su
 fcdp=0
 lcdp=27000
